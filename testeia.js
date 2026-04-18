@@ -19,7 +19,7 @@ const auth = new google.auth.GoogleAuth({
     },
     scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly']
 });
-
+console.log("SPREADSHEET_ID =", process.env.SPREADSHEET_ID);
 const sheets = google.sheets({
     version: 'v4',
     auth,
@@ -319,7 +319,11 @@ const estoqueDeclaration = {
 };
 
 async function getEstoque(marca, modelo, cambio, ano, valor, cor, status, kilometragem) {
+    const agora = Date.now();
 
+    if (estoqueCache && (agora - ultimaAtualizacao) < TEMPO_CACHE) {
+        return estoqueCache;
+    }
 
     const carros = await sheets.spreadsheets.values.batchGet({
         spreadsheetId: process.env.SPREADSHEET_ID,
@@ -332,16 +336,7 @@ async function getEstoque(marca, modelo, cambio, ano, valor, cor, status, kilome
         valueRenderOption: 'UNFORMATTED_VALUE',
     });
 
-    let filtro = {
-        marca: marca,
-        modelo: modelo,
-        cambio: cambio,
-        ano: ano,
-        valor: valor,
-        cor: cor,
-        status: status,
-        kilometragem: kilometragem
-    }
+
     let estoqueCarros = []
     let estoqueMotos = []
 
@@ -386,11 +381,10 @@ async function getEstoque(marca, modelo, cambio, ano, valor, cor, status, kilome
 
 
     })
-    return {
-        carros: estoqueCarros,
-        motos: estoqueMotos
-    };
+    estoqueCache = { carros, motos };
+    ultimaAtualizacao = agora;
 
+    return estoqueCache;
 }
 
 app.get('/webhook', async (req, res) => {
@@ -402,13 +396,19 @@ app.get('/webhook', async (req, res) => {
     console.log(hub_mode)
     console.log(hub_challenge)
     console.log(hub_token)
-    if (hub_token === process.env.VERIFY_TOKEN && hub_mode === 'subscribe' ) {
+    if (hub_token === process.env.VERIFY_TOKEN && hub_mode === 'subscribe') {
         return res.status(200).send(hub_challenge)
     }
     else {
         return res.sendStatus(400)
     }
 })
+app.post('/webhook', (req, res) => {
+    console.log("WEBHOOK RECEBIDO");
+    console.log(JSON.stringify(req.body, null, 2));
+
+    res.sendStatus(200);
+});
 
 //TODO DEPLOY:
 ///No Render, não usar o setup local de credenciais.
