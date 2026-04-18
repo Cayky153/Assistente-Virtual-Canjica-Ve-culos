@@ -3,6 +3,7 @@ import { GoogleGenAI } from "@google/genai";
 import { Type } from '@google/genai';
 import dotenv from 'dotenv';
 import express from 'express';
+
 //utilizei o express para poder fazer uma rota post com a ia e poder escrever meu prompt no postman
 const app = express();
 dotenv.config();
@@ -26,7 +27,18 @@ const sheets = google.sheets({
 let estoqueCache = null;
 let ultimaAtualizacao = 0;
 const TEMPO_CACHE = 60 * 1000;
-
+const requiredEnv = [
+    'GEMINI_API_KEY',
+    'GOOGLE_CLIENT_EMAIL',
+    'GOOGLE_PRIVATE_KEY',
+    'VERIFY_TOKEN',
+    'SPREADSHEET_ID'
+];
+requiredEnv.forEach((key) => {
+    if (!process.env[key]) {
+        throw new Error(`MISSING KEY: ${key}`)
+    }
+})
 
 app.use(express.json());
 //colocando o servidor local da aplicação
@@ -105,9 +117,34 @@ Faça perguntas curtas para ajudar, como:
 - Busca carro para cidade, trabalho ou família?
 - Procura veículo de qual ano, mais ou menos?
 
+# INTERPRETAÇÃO FLEXÍVEL DE DADOS
+
+Você deve interpretar valores escritos de forma natural pelo cliente:
+
+- "100 mil", "cem mil", "100k" significam aproximadamente 100000
+- "até 100 mil" significa veículos com valor menor ou igual a esse limite
+- "automático", "automatico", "auto" significam câmbio automático
+
+Você deve fazer essa interpretação internamente antes de consultar o estoque.
+
+A resposta final deve sempre ser baseada apenas nos dados reais da base.
+
+
 # REGRA DE CONSULTA
 Antes de responder sobre estoque, disponibilidade, preço, ano, quilometragem ou modelo específico, considere que essas informações devem vir da base.
 Se ainda não houver confirmação da base, não responda como se tivesse certeza.
+
+# REGRA DE RESPOSTA ESTRUTURADA (MUITO IMPORTANTE)
+Quando houver busca ou filtragem de veículos:
+
+- NÃO escolha veículos manualmente.
+- NÃO invente ou priorize resultados.
+- Sempre retorne TODOS os resultados que correspondem ao filtro da base.
+- Não ordene por preferência própria.
+- Não omita veículos que atendem aos critérios.
+
+Se houver múltiplos resultados, liste todos.
+Se não houver resultados, diga claramente que não encontrou.
 
 # REGRA DE ENCAMINHAMENTO
 Quando o cliente quiser seguir no atendimento, demonstrar intenção de compra ou quando não for possível confirmar uma informação com segurança, encaminhe para os vendedores.
@@ -203,6 +240,8 @@ async function gerarResposta(prompt) {
             }]
         }
     });
+    if (!response)
+        return console.error("Resposta não foi devolvida)")
     const resposta = response.text
     const toolCalls = response.functionCalls;
     if (!toolCalls || toolCalls.length === 0) {
@@ -245,8 +284,22 @@ async function gerarResposta(prompt) {
 //rota do post que retorna a resposta
 app.post('/digiteseuprompt', async (req, res) => {
 
+    if (!req.body)
+        return res.status(400).json({ message: "Req.body vazio" });
+    if (!req.body.prompt)
+        return res.status(400).json({ message: "Req.body vazio" });
+
     const prompt = req.body.prompt;
 
+    if (prompt.length > 2000) {
+        return res.status(400).json({ message: "Prompt muito grande" });
+    }
+    if (typeof prompt !== 'string') {
+        return res.status(400).json({ message: "Prompt não é string" });
+    }
+    if (!prompt.trim()) {
+        return res.status(400).json({ message: "Prompt vazio" });
+    }
     const response = await gerarResposta(prompt);
 
     res.json(response);
@@ -264,22 +317,17 @@ const estoqueDeclaration = {
         required: [],
     },
 };
-function normalizar(texto) {
-    return String(texto || '')
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "");
-}
+
 async function getEstoque(marca, modelo, cambio, ano, valor, cor, status, kilometragem) {
 
 
     const carros = await sheets.spreadsheets.values.batchGet({
-        spreadsheetId: '1OW7Td4WflWqGfz16aVpJGcGzcdoIVxg8JDmqAqbXf_4',
+        spreadsheetId: process.env.SPREADSHEET_ID,
         ranges: ['Carros!A:Z'],
         valueRenderOption: 'UNFORMATTED_VALUE',
     });
     const motos = await sheets.spreadsheets.values.batchGet({
-        spreadsheetId: '1OW7Td4WflWqGfz16aVpJGcGzcdoIVxg8JDmqAqbXf_4',
+        spreadsheetId: process.env.SPREADSHEET_ID,
         ranges: ['Motos!A:Z'],
         valueRenderOption: 'UNFORMATTED_VALUE',
     });
@@ -310,9 +358,9 @@ async function getEstoque(marca, modelo, cambio, ano, valor, cor, status, kilome
                 status: linhas[6],
                 kilometragem: linhas[7]
             }
-          
-                estoqueCarros.push(item);
-            
+
+            estoqueCarros.push(item);
+
 
         })
 
@@ -330,7 +378,7 @@ async function getEstoque(marca, modelo, cambio, ano, valor, cor, status, kilome
                 status: linhas[6],
                 kilometragem: linhas[7]
             }
-                estoqueMotos.push(item);
+            estoqueMotos.push(item);
 
         })
 
@@ -345,9 +393,22 @@ async function getEstoque(marca, modelo, cambio, ano, valor, cor, status, kilome
 
 }
 
-app.get('')
-const estoque = await getEstoque('Toyota')
-console.log(estoque)
+app.get('/webhook', async (req, res) => {
+    const hub_mode = req.query['hub.mode']
+    const hub_challenge = req.query['hub.challenge']
+    const hub_token = req.query['hub.verify_token']
+    console.log(hub_token)
+    console.log(process.env.VERIFY_TOKEN)
+    console.log(hub_mode)
+    console.log(hub_challenge)
+    console.log(hub_token)
+    if (hub_token === process.env.VERIFY_TOKEN && hub_mode === 'subscribe' ) {
+        return res.status(200).send(hub_challenge)
+    }
+    else {
+        return res.sendStatus(400)
+    }
+})
 
 //TODO DEPLOY:
 ///No Render, não usar o setup local de credenciais.
