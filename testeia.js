@@ -32,7 +32,8 @@ const requiredEnv = [
     'GOOGLE_CLIENT_EMAIL',
     'GOOGLE_PRIVATE_KEY',
     'VERIFY_TOKEN',
-    'SPREADSHEET_ID'
+    'SPREADSHEET_ID',
+    'WHATSAPP_TOKEN'
 ];
 requiredEnv.forEach((key) => {
     if (!process.env[key]) {
@@ -406,10 +407,39 @@ app.get('/webhook', async (req, res) => {
 app.post('/webhook', (req, res) => {
     console.log("WEBHOOK RECEBIDO");
     console.log(JSON.stringify(req.body, null, 2));
-
+    enviarMensagem();
     res.sendStatus(200);
 });
 
+const url = 'https://graph.facebook.com/v19.0/924577890565438/messages';
+
+const options = {
+  method: 'POST',
+  headers: {
+    'Authorization': `Bearer ${process.env.WHATSAPP_TOKEN}`,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    messaging_product: "whatsapp",
+    recipient_type: "individual",
+    to: "5585986444305",
+    type: "text",
+    text:{
+        body:"Hello",
+        preview_url: false
+    }
+  })
+};
+async function enviarMensagem() {
+try {
+  const response = await fetch(url, options);
+  const data = await response.json();
+  console.log(data);
+} catch (error) {
+  console.error(error);
+  res.sendStatus(400);
+}
+}
 //TODO DEPLOY:
 ///No Render, não usar o setup local de credenciais.
 //Configurar a credencial da service account no ambiente de produção.
