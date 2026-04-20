@@ -1,4 +1,4 @@
-import { processedMessages } from '../services/messageTrackerService'
+import { processedMessages } from '../services/messageTrackerService.js'
 import { getHistorico } from '../services/historicoService.js'
 import { gerarResposta } from '../services/iaService.js';
 import { enviarMensagem } from '../services/whatsappService.js'
