@@ -28,7 +28,12 @@ export async function gerarResposta(userId, prompt) {
     const toolCalls = response.functionCalls;
 
     if (!toolCalls || toolCalls.length === 0) {
-        historico.push(response.candidates[0].content);
+        historico.push({
+            role: "model",
+            parts: [
+                { text: response.text }
+            ]
+        });
         return response.text;
     }
 
