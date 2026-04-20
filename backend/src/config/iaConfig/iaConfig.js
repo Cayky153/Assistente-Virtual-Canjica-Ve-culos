@@ -4,7 +4,7 @@ import {instrucoes} from './systemInstructions.js'
 export const ai = new GoogleGenAI({
     apiKey: process.env.GEMINI_API_KEY
 });
- const estoqueDeclaration = {
+const estoqueDeclaration = {
     name: 'estoque',
     description: 'Consulta o estoque completo de carros e motos na planilha.',
     parameters: {

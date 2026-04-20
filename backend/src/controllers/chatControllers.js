@@ -5,10 +5,11 @@ export async function promptController(req, res) {
         if (!req.body)
             return res.status(400).json({ message: "Req.body vazio" });
 
-        const { conversationId, prompt } = req.body;
+        const prompt = req.body.prompt;
+        const userId= req.body.userId;
+        console.log("BODY RAW:", req.body);
+        console.log("TYPE:", typeof req.body?.prompt);
 
-        if (!conversationId)
-            return res.status(400).json({ message: "conversationId obrigatório" });
 
         if (typeof prompt !== 'string')
             return res.status(400).json({ message: "Prompt não é string" });
@@ -19,12 +20,9 @@ export async function promptController(req, res) {
         if (prompt.length > 2000)
             return res.status(400).json({ message: "Prompt muito grande" });
 
-        const response = await gerarResposta({
-            conversationId,
-            prompt
-        });
+        const response = await gerarResposta(prompt,userId);
 
-        return res.json(response);
+        return res.json({ reply: response });
 
     } catch (err) {
         console.error("Erro no controller:", err);
