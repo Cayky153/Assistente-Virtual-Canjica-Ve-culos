@@ -41,10 +41,10 @@ export async function gerarResposta(userId, prompt) {
         result = "Tool não suportada";
     }
 
-    const functionResponse = {
+    const functionResponse = [{
         name: tool_call.name,
         response: { result }
-    };
+    }];
 
     historico.push(response.candidates[0].content);
     historico.push({
