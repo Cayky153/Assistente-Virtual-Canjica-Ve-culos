@@ -5,6 +5,7 @@ import { getEstoque } from './estoqueService.js'
 
 export async function gerarResposta(userId, prompt) {
     const historico = getHistorico(userId);
+    console.log(JSON.stringify(historico, null, 2));
     historico.push({
         role: "user",
         parts: [{ text: prompt }]
