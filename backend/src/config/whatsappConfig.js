@@ -5,13 +5,5 @@ export const options = {
     headers: {
         'Authorization': `Bearer ${process.env.WHATSAPP_TOKEN}`,
         'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-        messaging_product: "whatsapp",
-        to,
-        type: "text",
-        text: {
-            body: text
-        }
-    })
+    }
 };
