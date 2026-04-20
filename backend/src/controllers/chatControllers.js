@@ -1,4 +1,4 @@
-import gerarResposta from '../services/iaService.js' 
+import {gerarResposta} from '../services/iaService.js' 
 
 export async function promptController(req, res) {
     try {
