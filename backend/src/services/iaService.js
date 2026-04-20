@@ -40,23 +40,28 @@ export async function gerarResposta(userId, prompt) {
     } else {
         result = "Tool não suportada";
     }
-
-    const functionResponse = [{
+    const functionResponse = {
         name: tool_call.name,
         response: { result }
-    }];
-
-    historico.push(response.candidates[0].content);
+    };
     historico.push({
         role: 'user',
-        parts: { functionResponse }
+        parts: [
+            {
+                functionResponse
+            }
+        ]
     });
-
     const final_response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
         contents: historico,
         config: iaConfig
     });
-
+    historico.push({
+        role: "model",
+        parts: [
+            { text: final_response.text }
+        ]
+    });
     return final_response.text;
 }
