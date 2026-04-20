@@ -1,7 +1,7 @@
 
 import { ai, iaConfig } from '../config/iaConfig/iaConfig.js'
-import {getHistorico} from './historicoService.js'
-import {getEstoque} from './estoqueService.js'
+import { getHistorico } from './historicoService.js'
+import { getEstoque } from './estoqueService.js'
 
 export async function gerarResposta(userId, prompt) {
     const historico = getHistorico(userId);
@@ -41,16 +41,15 @@ export async function gerarResposta(userId, prompt) {
         result = "Tool não suportada";
     }
 
-    const function_response_part = {
+    const functionResponse = {
         name: tool_call.name,
-        response: { result },
-        id: tool_call.id
+        response: { result }
     };
 
     historico.push(response.candidates[0].content);
     historico.push({
         role: 'user',
-        parts: [{ functionResponse: function_response_part }]
+        parts: { functionResponse }
     });
 
     const final_response = await ai.models.generateContent({
