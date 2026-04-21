@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="frontend/public/canjicaveiculos.jpg" alt="Canjica Veículos" width="150" style="border-radius: 50%"/>
+</p>
+
 # 🚗 Assistente Virtual - Canjica Veículos
 
 > Assistente virtual inteligente para atendimento automatizado de clientes de uma loja de veículos, com integração ao estoque em tempo real via Google Sheets e IA conversacional via Gemini.
@@ -247,7 +251,8 @@ A planilha deve ter duas abas: **Carros** e **Motos**, com as colunas a partir d
 
 ## 👨‍💻 Desenvolvedor
 
-Desenvolvido por **Cayky** como projeto final do **Geração Tech**.
+Desenvolvido por **Cayky**, estudante de Sistemas e Mídias Digitas na Universidade Federal do Ceará(UFC), como projeto final do **Geração Tech**.
+
 
 > *"Embora não tenha conseguido entregar da forma que almejava por fatores fora do meu controle, saí desse projeto como um desenvolvedor mais experiente — com conhecimentos em arquitetura de software, IA generativa, integração com APIs externas e webhooks. Foi uma das experiências mais enriquecedoras do meu aprendizado."*
 
