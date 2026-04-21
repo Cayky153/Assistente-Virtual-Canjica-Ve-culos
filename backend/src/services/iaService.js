@@ -2,7 +2,7 @@
 
 import { getHistorico } from './historicoService.js'
 import { getEstoque } from './estoqueService.js'
-import {iaConfig} from '../config/iaConfig/iaConfig.js'
+import {iaConfig,ai} from '../config/iaConfig/iaConfig.js'
 // Define a function that the model can call to control smart lights
 
 
