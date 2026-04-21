@@ -1,4 +1,7 @@
 import dotenv from 'dotenv';
+import fs from 'fs';
+console.log(".env existe?", fs.existsSync('.env'));
+console.log("CWD:", process.cwd());
 dotenv.config();
 
 const requiredEnv = [
