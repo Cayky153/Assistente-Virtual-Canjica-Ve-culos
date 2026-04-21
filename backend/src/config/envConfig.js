@@ -2,7 +2,9 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 console.log(".env existe?", fs.existsSync('.env'));
 console.log("CWD:", process.cwd());
-dotenv.config();
+if (process.env.NODE_ENV !== 'production') {
+    const dotenv = await import('dotenv');
+    dotenv.config();
 
 const requiredEnv = [
     'GEMINI_API_KEY',
@@ -17,3 +19,4 @@ requiredEnv.forEach((key) => {
         throw new Error(`MISSING KEY: ${key}`)
     }
 })
+}
