@@ -4,7 +4,9 @@ let cache = null;
 let ultimaAtualizacao = 0;
 
 const TEMPO_CACHE = 60 * 1000;
-
+console.log("spreadsheetId usado:", process.env.SPREADSHEET_ID);
+console.log("tipo:", typeof process.env.SPREADSHEET_ID);
+console.log("length:", process.env.SPREADSHEET_ID?.length);
 export async function getEstoque() {
     try {
         const agora = Date.now();
