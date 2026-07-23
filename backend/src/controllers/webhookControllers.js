@@ -53,7 +53,7 @@ export async function webhookControllerPost(req, res) {
         }
         processedMessages.add(messageId);
 
-        const respostaIA = await gerarResposta(from, message);
+        const respostaIA = await gerarResposta(message, from);
 
         await enviarMensagem(from, respostaIA);
 
