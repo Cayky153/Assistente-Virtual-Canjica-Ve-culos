@@ -9,11 +9,8 @@ export async function enviarMensagem(to, text) {
             body: text
         }
     })
-    console.log("DEBUG url:", url);
-    console.log("DEBUG options:", options);
-    console.log("DEBUG body:", body);
     try {
-        const response = await fetch(url,{options, body});
+        const response = await fetch(url,{...options, body});
         const data = await response.json();
         console.log("Mensagem enviada:", data);
     } catch (error) {
