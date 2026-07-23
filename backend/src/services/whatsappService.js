@@ -10,7 +10,7 @@ export async function enviarMensagem(to, text) {
         }
     })
     try {
-        const response = await fetch(url, options);
+        const response = await fetch(url, options, body);
         const data = await response.json();
         console.log("Mensagem enviada:", data);
     } catch (error) {
