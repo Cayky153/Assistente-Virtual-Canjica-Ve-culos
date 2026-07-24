@@ -45,7 +45,7 @@ export async function webhookControllerPost(req, res) {
         if (processedMessages.has(messageId)) {
             return res.sendStatus(200);
         }
-g
+
         processedMessages.add(messageId);
 
         res.sendStatus(200);
