@@ -9,7 +9,7 @@ export async function processarMensagem({ from, message, type }) {
         }
         if (!message) return;
 
-        const respostaIA = await gerarResposta(from, message);
+        const respostaIA = await gerarResposta(message,from);
         await enviarMensagem(from, respostaIA);
     } catch (err) {
         console.error("Erro no processamento assíncrono:", err);
