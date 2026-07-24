@@ -15,50 +15,45 @@ export async function getEstoque() {
             return cache;
         }
 
-        const carros = await sheets.spreadsheets.values.batchGet({
+        const resultado = await sheets.spreadsheets.values.batchGet({
             spreadsheetId: process.env.SPREADSHEET_ID,
-            ranges: ['Carros!A:Z'],
+            ranges: ['Carros!A:Z', 'Motos!A:Z'],
             valueRenderOption: 'UNFORMATTED_VALUE',
         });
 
-        const motos = await sheets.spreadsheets.values.batchGet({
-            spreadsheetId: process.env.SPREADSHEET_ID,
-            ranges: ['Motos!A:Z'],
-            valueRenderOption: 'UNFORMATTED_VALUE',
-        });
+        const carros = resultado.data.valueRanges[0];
+        const motos = resultado.data.valueRanges[1];
 
         const estoqueCarros = [];
         const estoqueMotos = [];
 
-        carros.data.valueRanges.forEach((valueRange) => {
-            valueRange.values.slice(2).forEach((linhas) => {
-                estoqueCarros.push({
-                    marca: linhas[0],
-                    modelo: linhas[1],
-                    cambio: linhas[2],
-                    ano: linhas[3],
-                    valor: linhas[4],
-                    cor: linhas[5],
-                    status: linhas[6],
-                    kilometragem: linhas[7]
-                });
+        carros.values.slice(2).forEach((linhas) => {
+            estoqueCarros.push({
+                marca: linhas[0],
+                modelo: linhas[1],
+                cambio: linhas[2],
+                ano: linhas[3],
+                valor: linhas[4],
+                cor: linhas[5],
+                status: linhas[6],
+                kilometragem: linhas[7]
             });
         });
 
-        motos.data.valueRanges.forEach((valueRange) => {
-            valueRange.values.slice(2).forEach((linhas) => {
-                estoqueMotos.push({
-                    marca: linhas[0],
-                    modelo: linhas[1],
-                    cambio: linhas[2],
-                    ano: linhas[3],
-                    valor: linhas[4],
-                    cor: linhas[5],
-                    status: linhas[6],
-                    kilometragem: linhas[7]
-                });
+
+        motos.values.slice(2).forEach((linhas) => {
+            estoqueMotos.push({
+                marca: linhas[0],
+                modelo: linhas[1],
+                cambio: linhas[2],
+                ano: linhas[3],
+                valor: linhas[4],
+                cor: linhas[5],
+                status: linhas[6],
+                kilometragem: linhas[7]
             });
         });
+
 
         cache = {
             carros: estoqueCarros,
