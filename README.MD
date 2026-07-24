@@ -25,6 +25,7 @@ O projeto foi desenvolvido como projeto final do Curso de IA Generativa Geraçã
 Inicialmente, o plano era realizar a integração com o WhatsApp Business, porém isso foi temporariamente impedido por pendências na verificação da conta Meta. Durante esse período, foi desenvolvida uma interface web para validar toda a lógica da aplicação.
 
 Atualmente, o sistema já conta com integração funcional com a WhatsApp Cloud API utilizando um número de teste, permitindo o envio e recebimento de mensagens diretamente pelo WhatsApp.
+
 ---
 
 ## ✨ Funcionalidades
