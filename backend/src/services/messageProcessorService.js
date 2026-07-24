@@ -1,4 +1,4 @@
-import { gerarResposta } from './services/iaService.js';
+import { gerarResposta } from './iaService.js';
 import { enviarMensagem } from './whatsappService.js'
 
 export async function processarMensagem({ from, message, type }) {
