@@ -2,7 +2,7 @@ import { processedMessages } from '../services/messageTrackerService.js'
 import { getHistorico } from '../services/historicoService.js'
 import { gerarResposta } from '../services/iaService.js';
 import { enviarMensagem } from '../services/whatsappService.js'
-
+import { processarMensagem } from '../services/messageProcessorService.js';
 export async function webhookController(req, res) {
     try {
         const hub_mode = req.query['hub.mode']
@@ -37,27 +37,20 @@ export async function webhookControllerPost(req, res) {
         const type = messageObj?.type;
         const messageId = messageObj?.id;
 
-        if (type && type !== "text") {
-            await enviarMensagem(from,
-                "No momento, consigo responder apenas mensagens de texto. \nPode me enviar sua dúvida por escrito que eu te ajudo!"
-            );
-            return res.sendStatus(200);
-        }
 
 
-        if (!message || !from || !messageId) {
+        if (!from || !messageId) {
             return res.sendStatus(200);
         }
         if (processedMessages.has(messageId)) {
             return res.sendStatus(200);
         }
+g
         processedMessages.add(messageId);
 
-        const respostaIA = await gerarResposta(message, from);
+        res.sendStatus(200);
+        processarMensagem({ from, message, type })
 
-        await enviarMensagem(from, respostaIA);
-
-        return res.sendStatus(200);
 
     } catch (err) {
         console.error("Webhook error:", err);
