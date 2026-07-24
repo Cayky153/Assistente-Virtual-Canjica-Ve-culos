@@ -22,6 +22,7 @@ A solução foi um **assistente virtual com IA**, capaz de:
 
 O projeto foi desenvolvido como **projeto final do Curso de Ia Generativa Geração Tech**, e embora o plano original fosse a integração com o WhatsApp Business (que foi impedida por pendências de verificação da conta Meta), o sistema foi adaptado para funcionar como uma interface web de chat, mantendo toda a robustez do backend, com a implementação do Whatsapp sendo realizada futuramente.
 
+**Atualização:** Whatsapp integrado e funcional com número de teste!
 ---
 
 ## ✨ Funcionalidades
@@ -31,7 +32,9 @@ O projeto foi desenvolvido como **projeto final do Curso de Ia Generativa Geraç
 - 🧠 **Histórico de conversa** por usuário, com limpeza automática a cada 24h
 - ⚡ **Cache de estoque** com atualização a cada 60 segundos para melhor performance
 - 🌙 **Modo escuro/claro**
-- 🔗 Webhooks da Meta configurados (prontos para integração WhatsApp futura)
+- 📱 **Integração com WhatsApp Cloud API**
+- 🔗 **Webhooks da Meta configurados**
+- 📩 **Envio e recebimento de mensagens pelo WhatsApp**
 
 ---
 
@@ -41,11 +44,11 @@ O projeto foi desenvolvido como **projeto final do Curso de Ia Generativa Geraç
 |---|---|
 | Frontend | React + Vite |
 | Backend | Node.js + Express |
-| IA | Google Gemini 2.5 Flash |
+| IA | Google Gemini 2.5 Flash-Lite |
 | Estoque | Google Sheets API v4 |
 | Autenticação Google | Service Account (OAuth2) |
 | Deploy Backend | Render |
-| Mensageria (futuro) | WhatsApp Cloud API (Meta) |
+| Mensageria | WhatsApp Cloud API (Meta) |
 
 ---
 
@@ -73,7 +76,7 @@ O projeto foi desenvolvido como **projeto final do Curso de Ia Generativa Geraç
 │       │   ├── historicoService.js         # Gerenciamento de histórico por usuário
 │       │   ├── iaService.js                # Integração com Gemini + function calling
 │       │   ├── messageTrackerService.js    # Rastreamento de mensagens
-│       │   └── whatsappService.js          # Envio de mensagens WhatsApp (futuro)
+│       │   └── whatsappService.js          # Envio de mensagens WhatsApp 
 │       ├── app.js                          # Configuração do Express
 │       └── server.js                       # Entry point do servidor
 │
@@ -101,7 +104,7 @@ O projeto foi desenvolvido como **projeto final do Curso de Ia Generativa Geraç
 
 ## 🧠 Como a IA Funciona
 
-A IA utiliza **Function Calling** do Gemini para consultar o estoque somente quando necessário:
+A IA utiliza **Function Calling** do Gemini. A IA decide autonomamente quando consultar o estoque utilizando Function Calling. Quando necessário, ela chama a função `getEstoque`, recebe os dados atualizados da planilha Google Sheets e utiliza essas informações para construir a resposta ao cliente.:
 
 1. Usuário envia uma mensagem
 2. O Gemini analisa se precisa consultar o estoque
@@ -241,20 +244,23 @@ A planilha deve ter duas abas: **Carros** e **Motos**, com as colunas a partir d
 
 ## 🔮 Próximos Passos
 
-- [ ] Verificação da conta Business Meta concluída
-- [ ] Integração completa com WhatsApp Business API
+- [x] Verificação da conta Business Meta concluída
+- [x] Integração completa com WhatsApp Business API
+- [ ] Migração do número de teste para um número oficial da empresa
+- [ ] Publicação em produção para atendimento de clientes reais
 - [ ] Substituição dos veículos placeholder pelo estoque real da loja
 - [ ] Painel administrativo para o dono da loja
+- [ ] Dashboard de métricas do atendimento
 - [ ] Notificações para o vendedor quando um cliente solicitar contato
 
 ---
 
 ## 👨‍💻 Desenvolvedor
 
-Desenvolvido por **Cayky**, estudante de Sistemas e Mídias Digitas na Universidade Federal do Ceará(UFC), como projeto final do **Geração Tech**.
+Desenvolvido por **Cayky**, estudante de Sistemas e Mídias Digitais na Universidade Federal do Ceará(UFC), como projeto final do **Geração Tech**.
 
 
-> *"Embora não tenha conseguido entregar da forma que almejava por fatores fora do meu controle, saí desse projeto como um desenvolvedor mais experiente — com conhecimentos em arquitetura de software, IA generativa, integração com APIs externas e webhooks. Foi uma das experiências mais enriquecedoras do meu aprendizado."*
+> *"Este projeto representou uma oportunidade de aplicar conceitos de IA generativa, integração com APIs externas, arquitetura de software, webhooks e automação de atendimento. Além do aprendizado técnico, proporcionou experiência no desenvolvimento de uma solução voltada para um problema real de negócio."*
 
 ---
 
