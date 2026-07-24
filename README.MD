@@ -20,9 +20,11 @@ A solução foi um **assistente virtual com IA**, capaz de:
 - Encaminhar o cliente para um vendedor humano quando necessário
 - Manter uma persona de vendedora amigável e profissional
 
-O projeto foi desenvolvido como **projeto final do Curso de Ia Generativa Geração Tech**, e embora o plano original fosse a integração com o WhatsApp Business (que foi impedida por pendências de verificação da conta Meta), o sistema foi adaptado para funcionar como uma interface web de chat, mantendo toda a robustez do backend, com a implementação do Whatsapp sendo realizada futuramente.
+O projeto foi desenvolvido como projeto final do Curso de IA Generativa Geração Tech.
 
-**Atualização:** Whatsapp integrado e funcional com número de teste!
+Inicialmente, o plano era realizar a integração com o WhatsApp Business, porém isso foi temporariamente impedido por pendências na verificação da conta Meta. Durante esse período, foi desenvolvida uma interface web para validar toda a lógica da aplicação.
+
+Atualmente, o sistema já conta com integração funcional com a WhatsApp Cloud API utilizando um número de teste, permitindo o envio e recebimento de mensagens diretamente pelo WhatsApp.
 ---
 
 ## ✨ Funcionalidades
